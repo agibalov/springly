@@ -12,6 +12,7 @@ public class ControllerHandlerFactory implements HandlerFactory<ControllerClassM
             List<ControllerParameterMetadata> parametersMetadata) {
 
         ControllerHandler controllerHandler = new ControllerHandler();
+        controllerHandler.handlerClass = classMetadata.clazz;
         controllerHandler.name = classMetadata.name + methodMetadata.name;
         controllerHandler.requestMapping = classMetadata.requestMapping + "/" + methodMetadata.requestMapping;
         controllerHandler.method = methodMetadata.method;

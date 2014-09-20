@@ -7,10 +7,16 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class ControllerHandler implements Handler<ControllerParameterMetadata> {
+    public Class<?> handlerClass;
     public String name;
     public String requestMapping;
     public Method method;
     public List<ControllerParameterMetadata> parameters;
+
+    @Override
+    public Class<?> getHandlerClass() {
+        return handlerClass;
+    }
 
     @Override
     public List<ControllerParameterMetadata> getParameters() {

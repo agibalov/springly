@@ -31,7 +31,13 @@ public class Dummy {
         handlerMethodArgumentResolverRegistry.register(new PathParamHandlerMethodArgumentResolver());
         handlerMethodArgumentResolverRegistry.register(new QueryParamHandlerMethodArgumentResolver());
 
-        controllerRequestProcessor =  new RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest>(controllerHandlerRegistry, handlerMethodArgumentResolverRegistry);
+        controllerRequestProcessor =
+                new RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest>(controllerHandlerRegistry, new HandlerInstanceResolver() {
+                    @Override
+                    public Object resolveInstance(Class<?> handlerClass) {
+                        return new MyController();
+                    }
+                }, handlerMethodArgumentResolverRegistry);
 
         List<ControllerHandler> controllerHandlers = classReader.readClass(MyController.class);
         controllerHandlerRegistry.register(controllerHandlers);
@@ -43,9 +49,7 @@ public class Dummy {
         controllerRequest.path = "/api/1";
         controllerRequest.pathParams = Collections.<String, Object>singletonMap("x", 123);
         controllerRequest.queryParams = Collections.<String, Object>singletonMap("y", "hello");
-        RunHandlerAction<ControllerHandler> runHandlerAction = controllerRequestProcessor.processRequest(controllerRequest);
-
-        Object result = runHandlerAction.run(new MyController());
+        Object result = controllerRequestProcessor.processRequest(controllerRequest);
         assertEquals("123 hello", result);
     }
 
@@ -59,9 +63,7 @@ public class Dummy {
         }};
 
         controllerRequest.queryParams = Collections.<String, Object>singletonMap("y", "hello");
-        RunHandlerAction<ControllerHandler> runHandlerAction = controllerRequestProcessor.processRequest(controllerRequest);
-
-        Object result = runHandlerAction.run(new MyController());
+        Object result = controllerRequestProcessor.processRequest(controllerRequest);
         assertEquals(5, result);
     }
 }

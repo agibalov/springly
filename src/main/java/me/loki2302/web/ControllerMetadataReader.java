@@ -32,16 +32,17 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
             return null;
         }
 
-        ControllerClassMetadata controllerClassContext = new ControllerClassMetadata();
-        controllerClassContext.name = clazz.getName();
+        ControllerClassMetadata classMetadata = new ControllerClassMetadata();
+        classMetadata.clazz = clazz;
+        classMetadata.name = clazz.getName();
 
         // may be annotated with @RequestMapping
         RequestMapping requestMapping = classHelper.getAnnotation(RequestMapping.class);
         if(requestMapping != null) {
-            controllerClassContext.requestMapping = requestMapping.value();
+            classMetadata.requestMapping = requestMapping.value();
         }
 
-        return controllerClassContext;
+        return classMetadata;
     }
 
     @Override
@@ -58,17 +59,17 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
             return null;
         }
 
-        ControllerMethodMetadata controllerMethodContext = new ControllerMethodMetadata();
-        controllerMethodContext.name = method.getName();
-        controllerMethodContext.method = method;
+        ControllerMethodMetadata methodMetadata = new ControllerMethodMetadata();
+        methodMetadata.name = method.getName();
+        methodMetadata.method = method;
 
         // may be annotated with @RequestMapping
         RequestMapping requestMapping = methodHelper.getAnnotation(RequestMapping.class);
         if(requestMapping != null) {
-            controllerMethodContext.requestMapping = requestMapping.value();
+            methodMetadata.requestMapping = requestMapping.value();
         }
 
-        return controllerMethodContext;
+        return methodMetadata;
     }
 
     @Override
@@ -96,18 +97,18 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
             return null;
         }
 
-        ControllerParameterMetadata controllerParameterContext = new ControllerParameterMetadata();
-        controllerParameterContext.type = parameterClass;
-        controllerParameterContext.annotations = parameterAnnotations;
+        ControllerParameterMetadata parameterMetadata = new ControllerParameterMetadata();
+        parameterMetadata.type = parameterClass;
+        parameterMetadata.annotations = parameterAnnotations;
 
         if(pathParam != null) {
-            controllerParameterContext.name = pathParam.value();
+            parameterMetadata.name = pathParam.value();
         } else if(queryParam != null) {
-            controllerParameterContext.name = queryParam.value();
+            parameterMetadata.name = queryParam.value();
         } else {
             throw new RuntimeException();
         }
 
-        return controllerParameterContext;
+        return parameterMetadata;
     }
 }

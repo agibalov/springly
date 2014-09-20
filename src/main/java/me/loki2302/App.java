@@ -26,7 +26,12 @@ public class App {
         handlerMethodArgumentResolverRegistry.register(new QueryParamHandlerMethodArgumentResolver());
 
         RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest> controllerRequestProcessor =
-                new RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest>(controllerHandlerRegistry, handlerMethodArgumentResolverRegistry);
+                new RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest>(controllerHandlerRegistry, new HandlerInstanceResolver() {
+                    @Override
+                    public Object resolveInstance(Class<?> handlerClass) {
+                        return new MyController();
+                    }
+                }, handlerMethodArgumentResolverRegistry);
 
         List<ControllerHandler> controllerHandlers = classReader.readClass(MyController.class);
         controllerHandlerRegistry.register(controllerHandlers);
@@ -48,9 +53,7 @@ public class App {
         }};
 
         controllerRequest.queryParams = Collections.<String, Object>singletonMap("y", "hello");
-        RunHandlerAction<ControllerHandler> runHandlerAction = controllerRequestProcessor.processRequest(controllerRequest);
-
-        Object result = runHandlerAction.run(new MyController());
+        Object result = controllerRequestProcessor.processRequest(controllerRequest);
         System.out.printf("addNumbers says: %s\n", result);
     }
 }
