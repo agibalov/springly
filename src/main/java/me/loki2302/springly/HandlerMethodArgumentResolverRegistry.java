@@ -1,6 +1,4 @@
-package me.loki2302.framework;
-
-import me.loki2302.framework.HandlerMethodArgumentResolver;
+package me.loki2302.springly;
 
 import java.util.ArrayList;
 import java.util.List;

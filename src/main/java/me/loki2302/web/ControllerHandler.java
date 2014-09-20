@@ -1,6 +1,6 @@
 package me.loki2302.web;
 
-import me.loki2302.framework.Handler;
+import me.loki2302.springly.Handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

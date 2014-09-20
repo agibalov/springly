@@ -1,6 +1,6 @@
 package me.loki2302.web;
 
-import me.loki2302.framework.HandlerMethodArgumentResolver;
+import me.loki2302.springly.HandlerMethodArgumentResolver;
 import me.loki2302.web.annotations.QueryParam;
 
 import java.lang.annotation.Annotation;

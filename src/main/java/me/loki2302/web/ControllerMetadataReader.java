@@ -1,6 +1,6 @@
 package me.loki2302.web;
 
-import me.loki2302.framework.MetadataReader;
+import me.loki2302.springly.MetadataReader;
 import me.loki2302.web.annotations.Controller;
 import me.loki2302.web.annotations.PathParam;
 import me.loki2302.web.annotations.QueryParam;

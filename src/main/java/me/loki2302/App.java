@@ -1,7 +1,7 @@
 package me.loki2302;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import me.loki2302.framework.*;
+import me.loki2302.springly.*;
 import me.loki2302.web.*;
 
 import java.util.Collections;

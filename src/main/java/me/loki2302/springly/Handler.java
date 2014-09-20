@@ -1,4 +1,4 @@
-package me.loki2302.framework;
+package me.loki2302.springly;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package me.loki2302.web;
 
-import me.loki2302.framework.HandlerFactory;
+import me.loki2302.springly.HandlerFactory;
 
 import java.util.List;
 

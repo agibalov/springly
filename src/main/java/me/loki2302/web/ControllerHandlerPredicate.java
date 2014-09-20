@@ -1,8 +1,6 @@
 package me.loki2302.web;
 
-import me.loki2302.framework.HandlerPredicate;
-import me.loki2302.web.ControllerHandler;
-import me.loki2302.web.ControllerRequest;
+import me.loki2302.springly.HandlerPredicate;
 
 public class ControllerHandlerPredicate implements HandlerPredicate<ControllerHandler, ControllerRequest> {
     @Override

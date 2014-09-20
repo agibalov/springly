@@ -1,6 +1,6 @@
 package me.loki2302;
 
-import me.loki2302.framework.*;
+import me.loki2302.springly.*;
 import me.loki2302.web.*;
 import org.junit.Before;
 import org.junit.Test;
