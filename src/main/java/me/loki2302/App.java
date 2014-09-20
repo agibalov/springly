@@ -1,59 +1,42 @@
 package me.loki2302;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import me.loki2302.springly.*;
-import me.loki2302.web.*;
+import me.loki2302.springly.RequestProcessor;
+import me.loki2302.springly.dummy.DummyAction;
+import me.loki2302.springly.dummy.DummyParam;
+import me.loki2302.springly.dummy.Springly;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class App {
     public static void main(String[] args) throws JsonProcessingException {
-        ControllerMetadataReader controllerMetadataReader = new ControllerMetadataReader();
-        ControllerHandlerFactory controllerHandlerFactory = new ControllerHandlerFactory();
-        HandlerReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata, ControllerHandler> classReader =
-                new HandlerReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata, ControllerHandler>(
-                        controllerMetadataReader, controllerHandlerFactory);
+        Calculator calculator = new Calculator();
+        RequestProcessor requestProcessor = Springly.makeRequestProcessor(calculator);
 
-        HandlerPredicate<ControllerHandler, ControllerRequest> handlerPredicate = new ControllerHandlerPredicate();
-        HandlerRegistry<ControllerHandler, ControllerRequest> controllerHandlerRegistry =
-                new HandlerRegistry<ControllerHandler, ControllerRequest>(handlerPredicate);
+        Object result = requestProcessor.processRequest(new HashMap<String, Object>() {{
+            put("action", "addNumbers");
+            put("a", 2);
+            put("b", 3);
+        }});
 
-        HandlerMethodArgumentResolverRegistry<ControllerParameterMetadata, ControllerRequest> handlerMethodArgumentResolverRegistry =
-                new HandlerMethodArgumentResolverRegistry<ControllerParameterMetadata, ControllerRequest>();
-        handlerMethodArgumentResolverRegistry.register(new PathParamHandlerMethodArgumentResolver());
-        handlerMethodArgumentResolverRegistry.register(new QueryParamHandlerMethodArgumentResolver());
+        System.out.println(result);
+    }
 
-        RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest> controllerRequestProcessor =
-                new RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest>(controllerHandlerRegistry, new HandlerInstanceResolver() {
-                    @Override
-                    public Object resolveInstance(Class<?> handlerClass) {
-                        return new MyController();
-                    }
-                }, handlerMethodArgumentResolverRegistry);
+    public static class Calculator {
+        @DummyAction("addNumbers")
+        public int addNumbers(
+                @DummyParam("a") int a,
+                @DummyParam("b") int b) {
 
-        List<ControllerHandler> controllerHandlers = classReader.readClass(MyController.class);
-        controllerHandlerRegistry.register(controllerHandlers);
+            return a + b;
+        }
 
-        /*ControllerRequest controllerRequest = new ControllerRequest();
-        controllerRequest.path = "/api/1";
-        controllerRequest.pathParams = Collections.<String, Object>singletonMap("x", 123);
-        controllerRequest.queryParams = Collections.<String, Object>singletonMap("y", "hello");
-        RunHandlerAction<ControllerHandler> runHandlerAction = controllerRequestProcessor.processRequest(controllerRequest);
+        @DummyAction("subNumbers")
+        public int subNumbers(
+                @DummyParam("a") int a,
+                @DummyParam("b") int b) {
 
-        Object result = runHandlerAction.run(new MyController());
-        System.out.printf("actionOne says: %s\n", result);*/
-
-        ControllerRequest controllerRequest = new ControllerRequest();
-        controllerRequest.path = "/api/addNumbers";
-        controllerRequest.pathParams = new HashMap<String, Object>() {{
-            put("x", 2);
-            put("y", 13);
-        }};
-
-        controllerRequest.queryParams = Collections.<String, Object>singletonMap("y", "hello");
-        Object result = controllerRequestProcessor.processRequest(controllerRequest);
-        System.out.printf("addNumbers says: %s\n", result);
+            return a - b;
+        }
     }
 }
