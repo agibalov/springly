@@ -1,6 +1,9 @@
 package me.loki2302.web;
 
+import me.loki2302.springly.ClassHelper;
 import me.loki2302.springly.MetadataReader;
+import me.loki2302.springly.MethodHelper;
+import me.loki2302.springly.ParameterHelper;
 import me.loki2302.web.annotations.Controller;
 import me.loki2302.web.annotations.PathParam;
 import me.loki2302.web.annotations.QueryParam;
@@ -8,23 +11,23 @@ import me.loki2302.web.annotations.RequestMapping;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public class ControllerMetadataReader implements MetadataReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata> {
     @Override
-    public ControllerClassMetadata readClass(Class<?> clazz) {
-        // must not be abstract
-        if(Modifier.isAbstract(clazz.getModifiers())) {
+    public ControllerClassMetadata readClass(
+            Class<?> clazz,
+            ClassHelper classHelper) {
+
+        if(classHelper.isAbstract()) {
             return null;
         }
 
-        // must be public
-        if(!Modifier.isPublic(clazz.getModifiers())) {
+        if(!classHelper.isPublic()) {
             return null;
         }
 
         // must be annotated with @Controller
-        Controller controller = clazz.getAnnotation(Controller.class);
+        Controller controller = classHelper.getAnnotation(Controller.class);
         if(controller == null) {
             return null;
         }
@@ -33,7 +36,7 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
         controllerClassContext.name = clazz.getName();
 
         // may be annotated with @RequestMapping
-        RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
+        RequestMapping requestMapping = classHelper.getAnnotation(RequestMapping.class);
         if(requestMapping != null) {
             controllerClassContext.requestMapping = requestMapping.value();
         }
@@ -42,14 +45,16 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
     }
 
     @Override
-    public ControllerMethodMetadata readMethod(ControllerClassMetadata controllerClassContext, Method method) {
-        // must not be abstract
-        if(Modifier.isAbstract(method.getModifiers())) {
+    public ControllerMethodMetadata readMethod(
+            ControllerClassMetadata controllerClassContext,
+            Method method,
+            MethodHelper methodHelper) {
+
+        if(methodHelper.isAbstract()) {
             return null;
         }
 
-        // must be public
-        if(!Modifier.isPublic(method.getModifiers())) {
+        if(!methodHelper.isPublic()) {
             return null;
         }
 
@@ -58,7 +63,7 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
         controllerMethodContext.method = method;
 
         // may be annotated with @RequestMapping
-        RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+        RequestMapping requestMapping = methodHelper.getAnnotation(RequestMapping.class);
         if(requestMapping != null) {
             controllerMethodContext.requestMapping = requestMapping.value();
         }
@@ -71,7 +76,8 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
             ControllerClassMetadata controllerClassContext,
             ControllerMethodMetadata controllerMethodContext,
             Class<?> parameterClass,
-            Annotation[] parameterAnnotations) {
+            Annotation[] parameterAnnotations,
+            ParameterHelper parameterHelper) {
 
         if(parameterClass != int.class &&
                 parameterClass != Integer.class &&
@@ -80,8 +86,8 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
             return null;
         }
 
-        PathParam pathParam = findAnnotation(parameterAnnotations, PathParam.class);
-        QueryParam queryParam = findAnnotation(parameterAnnotations, QueryParam.class);
+        PathParam pathParam = parameterHelper.getAnnotation(PathParam.class);
+        QueryParam queryParam = parameterHelper.getAnnotation(QueryParam.class);
         if(pathParam == null && queryParam == null) {
             return null;
         }
@@ -103,15 +109,5 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
         }
 
         return controllerParameterContext;
-    }
-
-    private static <TAnnotation extends Annotation> TAnnotation findAnnotation(Annotation[] annotations, Class<? extends Annotation> annotationClass) {
-        for(Annotation annotation : annotations) {
-            if(annotation.annotationType() == annotationClass) {
-                return (TAnnotation)annotation;
-            }
-        }
-
-        return null;
     }
 }

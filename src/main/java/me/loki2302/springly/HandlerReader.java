@@ -19,14 +19,19 @@ public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler ext
 
     public List<THandler> readClass(Class<?> clazz) {
         List<THandler> handlers = new ArrayList<THandler>();
-        TClassMeta classContext = metadataReader.readClass(clazz);
+        ClassHelper classHelper = new ClassHelper(clazz);
+        TClassMeta classContext = metadataReader.readClass(clazz, classHelper);
         if(classContext == null) {
             return handlers;
         }
 
         Method[] methods = clazz.getDeclaredMethods();
         for(Method method : methods) {
-            TMethodMeta methodContext = metadataReader.readMethod(classContext, method);
+            MethodHelper methodHelper = new MethodHelper(method);
+            TMethodMeta methodContext = metadataReader.readMethod(
+                    classContext,
+                    method,
+                    methodHelper);
             if(methodContext == null) {
                 continue;
             }
@@ -38,7 +43,13 @@ public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler ext
             for(int i = 0; i < numberOfParameters; ++i) {
                 Class<?> parameterClass = parameterTypes[i];
                 Annotation[] parameterAnnotations = parameterAnnotationArrays[i];
-                TParameterMeta parameterContext = metadataReader.readParameter(classContext, methodContext, parameterClass, parameterAnnotations);
+                ParameterHelper parameterHelper = new ParameterHelper(parameterClass, parameterAnnotations);
+                TParameterMeta parameterContext = metadataReader.readParameter(
+                        classContext,
+                        methodContext,
+                        parameterClass,
+                        parameterAnnotations,
+                        parameterHelper);
                 if(parameterContext == null) {
                     continue;
                 }
@@ -50,7 +61,10 @@ public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler ext
                 continue;
             }
 
-            THandler handler = handlerFactory.makeHandler(classContext, methodContext, parameterContexts);
+            THandler handler = handlerFactory.makeHandler(
+                    classContext,
+                    methodContext,
+                    parameterContexts);
             handlers.add(handler);
         }
 
