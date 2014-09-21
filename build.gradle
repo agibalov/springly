@@ -12,10 +12,10 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'maven-publish'
 
-mainClassName = "me.loki2302.App"
+mainClassName = "me.loki2302.springly.playground.App"
 
 sourceCompatibility = 1.5
-version = '0.1'
+version = '0.2'
 
 repositories {
     mavenCentral()

@@ -1,4 +1,4 @@
-package me.loki2302.web;
+package me.loki2302.springly.playground.web;
 
 import java.lang.reflect.Method;
 

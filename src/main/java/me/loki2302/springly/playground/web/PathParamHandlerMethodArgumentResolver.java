@@ -1,15 +1,15 @@
-package me.loki2302.web;
+package me.loki2302.springly.playground.web;
 
 import me.loki2302.springly.HandlerMethodArgumentResolver;
-import me.loki2302.web.annotations.QueryParam;
+import me.loki2302.springly.playground.web.annotations.PathParam;
 
 import java.lang.annotation.Annotation;
 
-public class QueryParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver<ControllerParameterMetadata, ControllerRequest> {
+public class PathParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver<ControllerParameterMetadata, ControllerRequest> {
     @Override
     public boolean canResolve(ControllerParameterMetadata controllerParameterContext, ControllerRequest resolutionContext) {
-        QueryParam queryParam = findAnnotation(controllerParameterContext.annotations, QueryParam.class);
-        if(queryParam == null) {
+        PathParam pathParam = findAnnotation(controllerParameterContext.annotations, PathParam.class);
+        if(pathParam == null) {
             return false;
         }
 
@@ -18,9 +18,9 @@ public class QueryParamHandlerMethodArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolve(ControllerParameterMetadata controllerParameterContext, ControllerRequest resolutionContext) {
-        QueryParam queryParam = findAnnotation(controllerParameterContext.annotations, QueryParam.class);
-        String name = queryParam.value();
-        return resolutionContext.queryParams.get(name);
+        PathParam pathParam = findAnnotation(controllerParameterContext.annotations, PathParam.class);
+        String name = pathParam.value();
+        return resolutionContext.pathParams.get(name);
     }
 
     private static <TAnnotation extends Annotation> TAnnotation findAnnotation(Annotation[] annotations, Class<? extends Annotation> annotationClass) {

@@ -1,7 +1,7 @@
-package me.loki2302;
+package me.loki2302.springly;
 
-import me.loki2302.springly.*;
-import me.loki2302.web.*;
+import me.loki2302.springly.playground.MyController;
+import me.loki2302.springly.playground.web.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class Dummy {
+public class DummyTest {
     private RequestProcessor<ControllerHandler, ControllerParameterMetadata, ControllerRequest> controllerRequestProcessor;
 
     @Before

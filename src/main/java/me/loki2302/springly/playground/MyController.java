@@ -1,9 +1,9 @@
-package me.loki2302;
+package me.loki2302.springly.playground;
 
-import me.loki2302.web.annotations.Controller;
-import me.loki2302.web.annotations.PathParam;
-import me.loki2302.web.annotations.QueryParam;
-import me.loki2302.web.annotations.RequestMapping;
+import me.loki2302.springly.playground.web.annotations.Controller;
+import me.loki2302.springly.playground.web.annotations.PathParam;
+import me.loki2302.springly.playground.web.annotations.QueryParam;
+import me.loki2302.springly.playground.web.annotations.RequestMapping;
 
 @Controller
 @RequestMapping("/api")

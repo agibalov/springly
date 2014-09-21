@@ -1,13 +1,13 @@
-package me.loki2302.web;
+package me.loki2302.springly.playground.web;
 
 import me.loki2302.springly.ClassHelper;
 import me.loki2302.springly.MetadataReader;
 import me.loki2302.springly.MethodHelper;
 import me.loki2302.springly.ParameterHelper;
-import me.loki2302.web.annotations.Controller;
-import me.loki2302.web.annotations.PathParam;
-import me.loki2302.web.annotations.QueryParam;
-import me.loki2302.web.annotations.RequestMapping;
+import me.loki2302.springly.playground.web.annotations.Controller;
+import me.loki2302.springly.playground.web.annotations.PathParam;
+import me.loki2302.springly.playground.web.annotations.QueryParam;
+import me.loki2302.springly.playground.web.annotations.RequestMapping;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
