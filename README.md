@@ -53,3 +53,15 @@ Everything is just trivial. But what if we want to call `Calculator`'s methods d
     assertEquals(5, result);
 
 Note that Springly is not some sort of RPC: it only provides a set of abstract tools to read POJOs, build handlers based on metadata read, and then call these handlers based on request details.
+
+    repositories {
+      ...
+      maven {
+        url "http://dl.bintray.com/loki2302/maven/"
+      }
+    }
+
+    dependencies {
+      ...
+      compile 'me.loki2302:springly:0.2'
+    }
