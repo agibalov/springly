@@ -5,38 +5,33 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler extends Handler> {
-    private final MetadataReader<TClassMeta, TMethodMeta, TParameterMeta> metadataReader;
-    private final HandlerFactory<TClassMeta, TMethodMeta, TParameterMeta, THandler> handlerFactory;
+public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler> {
+    private final MetadataReader<TClassMeta, TMethodMeta, TParameterMeta, THandler> metadataReader;
 
-    public HandlerReader(
-            MetadataReader<TClassMeta, TMethodMeta, TParameterMeta> metadataReader,
-            HandlerFactory<TClassMeta, TMethodMeta, TParameterMeta, THandler> handlerFactory) {
-
+    public HandlerReader(MetadataReader<TClassMeta, TMethodMeta, TParameterMeta, THandler> metadataReader) {
         this.metadataReader = metadataReader;
-        this.handlerFactory = handlerFactory;
     }
 
     public List<THandler> readClass(Class<?> clazz) {
         List<THandler> handlers = new ArrayList<THandler>();
         ClassHelper classHelper = new ClassHelper(clazz);
-        TClassMeta classContext = metadataReader.readClass(clazz, classHelper);
-        if(classContext == null) {
+        TClassMeta classMeta = metadataReader.readClass(clazz, classHelper);
+        if(classMeta == null) {
             return handlers;
         }
 
         Method[] methods = clazz.getDeclaredMethods();
         for(Method method : methods) {
             MethodHelper methodHelper = new MethodHelper(method);
-            TMethodMeta methodContext = metadataReader.readMethod(
-                    classContext,
+            TMethodMeta methodMeta = metadataReader.readMethod(
+                    classMeta,
                     method,
                     methodHelper);
-            if(methodContext == null) {
+            if(methodMeta == null) {
                 continue;
             }
 
-            List<TParameterMeta> parameterContexts = new ArrayList<TParameterMeta>();
+            List<TParameterMeta> parameterMetas = new ArrayList<TParameterMeta>();
             Class<?>[] parameterTypes = method.getParameterTypes();
             Annotation[][] parameterAnnotationArrays = method.getParameterAnnotations();
             int numberOfParameters = parameterTypes.length;
@@ -45,8 +40,8 @@ public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler ext
                 Annotation[] parameterAnnotations = parameterAnnotationArrays[i];
                 ParameterHelper parameterHelper = new ParameterHelper(parameterClass, parameterAnnotations);
                 TParameterMeta parameterContext = metadataReader.readParameter(
-                        classContext,
-                        methodContext,
+                        classMeta,
+                        methodMeta,
                         parameterClass,
                         parameterAnnotations,
                         parameterHelper);
@@ -54,17 +49,17 @@ public class HandlerReader<TClassMeta, TMethodMeta, TParameterMeta, THandler ext
                     continue;
                 }
 
-                parameterContexts.add(parameterContext);
+                parameterMetas.add(parameterContext);
             }
 
-            if(parameterContexts.size() != numberOfParameters) {
+            if(parameterMetas.size() != numberOfParameters) {
                 continue;
             }
 
-            THandler handler = handlerFactory.makeHandler(
-                    classContext,
-                    methodContext,
-                    parameterContexts);
+            THandler handler = metadataReader.makeHandler(
+                    classMeta,
+                    methodMeta,
+                    parameterMetas);
             handlers.add(handler);
         }
 

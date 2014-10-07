@@ -1,10 +1,6 @@
 package me.loki2302.springly.dummy;
 
 import me.loki2302.springly.*;
-import me.loki2302.springly.dummy.DummyHandler;
-import me.loki2302.springly.dummy.DummyHandlerFactory;
-import me.loki2302.springly.dummy.DummyMetadataReader;
-import me.loki2302.springly.dummy.DummyParamHandlerMethodArgumentResolver;
 
 import java.util.List;
 import java.util.Map;
@@ -15,9 +11,8 @@ public final class Springly {
 
     public static RequestProcessor<DummyHandler, Map<String, Object>, Map<String, Object>> makeRequestProcessor(final Object service) {
         DummyMetadataReader dummyMetadataReader = new DummyMetadataReader();
-        DummyHandlerFactory dummyHandlerFactory = new DummyHandlerFactory();
         HandlerReader<Map<String, Object>, Map<String, Object>, Map<String, Object>, DummyHandler> dummyHandlerReader =
-                new HandlerReader<Map<String, Object>, Map<String, Object>, Map<String, Object>, DummyHandler>(dummyMetadataReader, dummyHandlerFactory);
+                new HandlerReader<Map<String, Object>, Map<String, Object>, Map<String, Object>, DummyHandler>(dummyMetadataReader);
 
         HandlerMethodArgumentResolverRegistry<Map<String, Object>, Map<String, Object>> handlerMethodArgumentResolverRegistry = new HandlerMethodArgumentResolverRegistry<Map<String, Object>, Map<String, Object>>();
         handlerMethodArgumentResolverRegistry.register(new DummyParamHandlerMethodArgumentResolver());

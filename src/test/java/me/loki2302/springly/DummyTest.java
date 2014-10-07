@@ -17,10 +17,9 @@ public class DummyTest {
     @Before
     public void setUp() {
         ControllerMetadataReader controllerMetadataReader = new ControllerMetadataReader();
-        ControllerHandlerFactory controllerHandlerFactory = new ControllerHandlerFactory();
         HandlerReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata, ControllerHandler> classReader =
                 new HandlerReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata, ControllerHandler>(
-                        controllerMetadataReader, controllerHandlerFactory);
+                        controllerMetadataReader);
 
         HandlerPredicate<ControllerHandler, ControllerRequest> handlerPredicate = new ControllerHandlerPredicate();
         HandlerRegistry<ControllerHandler, ControllerRequest> controllerHandlerRegistry =

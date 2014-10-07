@@ -8,9 +8,10 @@ import me.loki2302.springly.ParameterHelper;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class DummyMetadataReader implements MetadataReader<Map<String, Object>, Map<String, Object>, Map<String, Object>> {
+public class DummyMetadataReader implements MetadataReader<Map<String, Object>, Map<String, Object>, Map<String, Object>, DummyHandler> {
     @Override
     public Map<String, Object> readClass(
             Class<?> clazz,
@@ -62,5 +63,24 @@ public class DummyMetadataReader implements MetadataReader<Map<String, Object>, 
         Map<String, Object> paramMetadata = new HashMap<String, Object>();
         paramMetadata.put("paramName", dummyParam.value());
         return paramMetadata;
+    }
+
+    @Override
+    public DummyHandler makeHandler(
+            Map<String, Object> classMeta,
+            Map<String, Object> methodMeta,
+            List<Map<String, Object>> parametersMeta) {
+
+        String actionName = (String)methodMeta.get("actionName");
+        Method method = (Method)methodMeta.get("method");
+        Class<?> handlerClass = (Class<?>)classMeta.get("handlerClass");
+
+        DummyHandler dummyHandler = new DummyHandler(
+                actionName,
+                method,
+                handlerClass,
+                parametersMeta);
+
+        return dummyHandler;
     }
 }

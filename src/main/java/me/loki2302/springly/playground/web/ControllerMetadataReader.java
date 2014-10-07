@@ -11,8 +11,9 @@ import me.loki2302.springly.playground.web.annotations.RequestMapping;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 
-public class ControllerMetadataReader implements MetadataReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata> {
+public class ControllerMetadataReader implements MetadataReader<ControllerClassMetadata, ControllerMethodMetadata, ControllerParameterMetadata, ControllerHandler> {
     @Override
     public ControllerClassMetadata readClass(
             Class<?> clazz,
@@ -110,5 +111,21 @@ public class ControllerMetadataReader implements MetadataReader<ControllerClassM
         }
 
         return parameterMetadata;
+    }
+
+    @Override
+    public ControllerHandler makeHandler(
+            ControllerClassMetadata classMetadata,
+            ControllerMethodMetadata methodMetadata,
+            List<ControllerParameterMetadata> parametersMetadata) {
+
+        ControllerHandler controllerHandler = new ControllerHandler();
+        controllerHandler.handlerClass = classMetadata.clazz;
+        controllerHandler.name = classMetadata.name + methodMetadata.name;
+        controllerHandler.requestMapping = classMetadata.requestMapping + "/" + methodMetadata.requestMapping;
+        controllerHandler.method = methodMetadata.method;
+        controllerHandler.parameters = parametersMetadata;
+
+        return controllerHandler;
     }
 }
